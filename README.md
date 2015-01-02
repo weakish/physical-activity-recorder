@@ -1,5 +1,7 @@
 # physical-activity-recorder
 
+[![Gem Version](https://badge.fury.io/rb/physical-activity-recorder.svg)](http://badge.fury.io/rb/physical-activity-recorder)
+
 `physical-activity-recorder` is a command line tool to record and plan physical activity.
 
 ## Installation
