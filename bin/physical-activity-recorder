@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+require 'physical-activity-recorder'
+require 'moneta'
+require 'xdg'
+
+SYNOPSIS = 'Usage:
+            physical-activity-recorder moderate_minutes [vigorous_minutes, notes]
+            physical-activity-recorder query'
+
+
+# getopts :: Hash
+def getopts
+    { current_time: Time.now,
+      moderate_minutes: ARGV[0].to_i,
+      vigorous_minutes:  ARGV[1].to_i || 0,
+      notes: ARGV[2] || '',
+    }
+end
+
+
+def record_activity(records, opts)
+  new_record = Physical_activity_recorder.record(opts[:current_time], opts[:moderate_minutes], opts[:vigorous_minutes], opts[:notes])
+  Physical_activity_recorder.add_to_records(new_record, records)
+end
+
+def plan_activity(ends, opts)
+  ends = Physical_activity_recorder.plan(opts[:current_time], ends[:soft], ends[:hard],
+                                         opts[:moderate_minutes], opts[:vigorous_minutes])
+end
+
+def main
+  if ARGV.length > 3
+    abort "ArgumentError\n\n#{SYNOPSIS}\n"
+  elsif ARGV[0] =~ /^[-h]/
+    puts SYNOPSIS
+  else
+      begin
+        opts = getopts
+
+        activity_records= XDG['CONFIG_HOME'].to_s + '/physical-activity-recorder'
+        moneta_store = ENV['PHYSICAL_ACTIVITY_RECORDS'] || activity_records
+        records = Moneta.new(:Daybreak, file: moneta_store)
+        ends = {}
+        ends[:soft] = records['soft_end'] || Time.now
+        ends[:hard] = records['hard_end'] || Time.now
+
+        if ARGV[0] =~ /^[0-9]/
+          record_activity(records, opts)
+
+          ends = plan_activity(ends, opts)
+          records['soft_end'] = ends[:soft]
+          records['hard_end'] = ends[:hard]
+        end
+      ensure
+        records.close
+        puts "Soft: #{ends[:soft].strftime('%F') }; Hard: #{ends[:hard].strftime('%F')}"
+      end
+  end
+end
+
+main

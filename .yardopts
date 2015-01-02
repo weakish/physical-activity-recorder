@@ -1,0 +1,9 @@
+--readme README.md
+--charset utf-8
+--markup markdown
+--markup-provider redcarpet
+--default-return void
+--name-tag doctest
+--hide-tag doctest
+lib/*.rb lib/**/*.rb -
+*.md LICENSE.txt
