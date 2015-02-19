@@ -105,7 +105,10 @@ module Physical_activity_recorder
   #   => {:soft=>2001-09-16 09:46:40 +0800, :hard=>2001-09-16 09:46:40 +0800}
   #   >> plan[time, time, time, 3000, 3000]
   #   => {:soft=>2001-09-16 09:46:40 +0800, :hard=>2001-09-16 09:46:40 +0800}
-
+  #   >> outdated_time = Time.at(500000000)
+  #   => 1985-11-05 08:53:20 +0800
+  #   >> plan[time, outdated_time, outdated_time, 10, 5]
+  #   => {:soft=>2001-09-02 09:46:40 +0800, :hard=>2001-09-02 09:46:40 +0800}
   def plan(current_time=Time.now, current_soft_end=Time.now, current_hard_end=Time.now, moderate_minutes=0, vigorous_minutes=0)
     # Activity should be done for at least 10 minutes at a time.
     if moderate_minutes + vigorous_minutes < 10
@@ -132,10 +135,12 @@ module Physical_activity_recorder
     # soft end and hard end should not exceed 7 days (1 week).
     result = {soft: soft_end, hard: hard_end}
     result.each do |k, v|
-      result[k] = if v  - current_time < 7.days
+      result[k] = if (v  - current_time).abs < 7.days
             v
-          else
+          elsif v > current_time
             current_time + 7.days
+          else
+            current_time - 7.days
           end
     end
     result

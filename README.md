@@ -94,6 +94,7 @@ Be aware:
     You'd better exercise more than 10 minutes at a time.
 2.  *Soft* and *Hard* won't exceed 7 days from now.
     Dedicating several days to exercises does not mean you need no exercise for several weeks.
+    Also, for example, you have stopped exercising for one month since you are in the hospital, it does not make sense to make up that month afterwards.
 
 You can query *Soft* and *Hard* via
 
