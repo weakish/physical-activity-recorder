@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'MIT'
 
   spec.metadata      = {
-                        'repository' => 'https://github.com/weakish/physical-activity-recorder',
+                        'repository' => 'https://github.com/weakish/physical-activity-recorder.git',
                         'documentation' => 'http://www.rubydoc.info/gems/physical-activity-recorder/',
                         'issues' => 'https://github.com/weakish/physical-activity-recorder/issues/',
                         'wiki' => 'https://github.com/weakish/physical-activity-recorder/wiki/',
